@@ -1,7 +1,7 @@
 // 방 화면
 import './style.css'
 import { getRoom, saveRoom } from './storage.js'
-import { convertToEmoji } from './emojiConverter.js'
+import { convertToEmoji, suggestRoomName, generateMission } from './emojiConverter.js'
 
 let currentRoom = null
 
@@ -25,17 +25,33 @@ export function initRoom() {
 
 function renderRoom() {
   const app = document.querySelector('#app')
+  const objectCount = currentRoom.objects.length
+  const showTitleSuggestion = objectCount >= 3
+  const showMission = objectCount >= 5
   
   app.innerHTML = `
     <div class="room-container">
       <header class="room-header">
-        <input 
-          type="text" 
-          class="room-title-input" 
-          value="${escapeHtml(currentRoom.name)}" 
-          placeholder="Untitled Room"
-        />
+        <div class="room-title-wrapper">
+          <input 
+            type="text" 
+            class="room-title-input" 
+            value="${escapeHtml(currentRoom.name)}" 
+            placeholder="Untitled Room"
+          />
+          ${showTitleSuggestion && currentRoom.name === 'Untitled Room' ? `
+            <button class="room-action-btn room-title-suggest-btn" id="title-suggest-btn">
+              제목 제안
+            </button>
+          ` : ''}
+        </div>
       </header>
+      
+      ${currentRoom.mission ? `
+        <div class="room-mission">
+          <span class="mission-text">${escapeHtml(currentRoom.mission)}</span>
+        </div>
+      ` : ''}
       
       <div class="room-objects-grid" id="objects-grid">
         ${currentRoom.objects.map((obj, index) => `
@@ -47,6 +63,11 @@ function renderRoom() {
       </div>
       
       <div class="room-input-container">
+        ${showMission && !currentRoom.mission ? `
+          <button class="room-action-btn room-mission-btn" id="mission-btn">
+            미션 생성
+          </button>
+        ` : ''}
         <input 
           type="text" 
           class="room-input" 
@@ -112,6 +133,46 @@ function renderRoom() {
       renderRoom()
     })
   })
+  
+  // 제목 제안 버튼
+  const titleSuggestBtn = document.getElementById('title-suggest-btn')
+  if (titleSuggestBtn) {
+    titleSuggestBtn.addEventListener('click', async () => {
+      titleSuggestBtn.disabled = true
+      titleSuggestBtn.textContent = '생성 중...'
+      
+      try {
+        const suggestedName = await suggestRoomName(currentRoom.objects)
+        currentRoom.name = suggestedName
+        saveRoom(currentRoom)
+        renderRoom()
+      } catch (error) {
+        console.error('Error suggesting room name:', error)
+        titleSuggestBtn.disabled = false
+        titleSuggestBtn.textContent = '제목 제안'
+      }
+    })
+  }
+  
+  // 미션 생성 버튼
+  const missionBtn = document.getElementById('mission-btn')
+  if (missionBtn) {
+    missionBtn.addEventListener('click', async () => {
+      missionBtn.disabled = true
+      missionBtn.textContent = '생성 중...'
+      
+      try {
+        const mission = await generateMission(currentRoom.objects)
+        currentRoom.mission = mission
+        saveRoom(currentRoom)
+        renderRoom()
+      } catch (error) {
+        console.error('Error generating mission:', error)
+        missionBtn.disabled = false
+        missionBtn.textContent = '미션 생성'
+      }
+    })
+  }
   
   // 포커스
   input.focus()

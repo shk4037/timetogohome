@@ -118,3 +118,123 @@ Examples:
   }
 }
 
+// 방 이름 제안
+export async function suggestRoomName(objects) {
+  const API_KEY = import.meta.env.VITE_OPENAI_API_KEY
+  
+  if (!API_KEY || API_KEY === 'your_api_key_here') {
+    // 폴백: 간단한 제안
+    const suggestions = ['온실', '서재', '작은 방', '나만의 공간']
+    return suggestions[Math.floor(Math.random() * suggestions.length)]
+  }
+  
+  try {
+    const objectTexts = objects.map(obj => obj.text).join(', ')
+    const objectEmojis = objects.map(obj => obj.emoji).join(' ')
+    
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${API_KEY}`
+      },
+      body: JSON.stringify({
+        model: 'gpt-4o-mini',
+        messages: [
+          {
+            role: 'system',
+            content: `You suggest room names based on objects placed in the room. 
+Return ONLY a JSON object in this format: {"name": "room name"}
+The name should be 1-3 words, poetic and evocative (e.g., "온실", "동물원", "서재", "별빛 방", "향기로운 공간").
+Do not include any explanation or markdown. Only return the JSON object.`
+          },
+          {
+            role: 'user',
+            content: `Objects in this room: ${objectTexts} (${objectEmojis})`
+          }
+        ],
+        response_format: { type: 'json_object' },
+        temperature: 0.8,
+        max_tokens: 30
+      })
+    })
+    
+    if (!response.ok) {
+      throw new Error(`API error: ${response.status}`)
+    }
+    
+    const data = await response.json()
+    const content = data.choices[0].message.content.trim()
+    const parsed = JSON.parse(content)
+    
+    return parsed.name || 'Untitled Room'
+    
+  } catch (error) {
+    console.error('GPT API error:', error)
+    const suggestions = ['온실', '서재', '작은 방', '나만의 공간']
+    return suggestions[Math.floor(Math.random() * suggestions.length)]
+  }
+}
+
+// 미션 생성
+export async function generateMission(objects) {
+  const API_KEY = import.meta.env.VITE_OPENAI_API_KEY
+  
+  if (!API_KEY || API_KEY === 'your_api_key_here') {
+    // 폴백: 간단한 미션
+    return '이 공간에 하나 더 추가해보세요.'
+  }
+  
+  try {
+    const objectTexts = objects.map(obj => obj.text).join(', ')
+    const objectEmojis = objects.map(obj => obj.emoji).join(' ')
+    
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${API_KEY}`
+      },
+      body: JSON.stringify({
+        model: 'gpt-4o-mini',
+        messages: [
+          {
+            role: 'system',
+            content: `You generate gentle, inspiring missions based on objects in a room.
+Analyze the pattern of objects and suggest something the user might enjoy doing or adding.
+The mission should be:
+- Gentle and warm, not demanding
+- Based on the pattern you see in the objects
+- Short (1 sentence, under 20 words)
+- Suggestive, not prescriptive
+
+Return ONLY a JSON object in this format: {"mission": "mission text"}
+Do not include any explanation or markdown. Only return the JSON object.`
+          },
+          {
+            role: 'user',
+            content: `Objects in this room: ${objectTexts} (${objectEmojis})`
+          }
+        ],
+        response_format: { type: 'json_object' },
+        temperature: 0.9,
+        max_tokens: 50
+      })
+    })
+    
+    if (!response.ok) {
+      throw new Error(`API error: ${response.status}`)
+    }
+    
+    const data = await response.json()
+    const content = data.choices[0].message.content.trim()
+    const parsed = JSON.parse(content)
+    
+    return parsed.mission || '이 공간을 더 채워보세요.'
+    
+  } catch (error) {
+    console.error('GPT API error:', error)
+    return '이 공간에 하나 더 추가해보세요.'
+  }
+}
+

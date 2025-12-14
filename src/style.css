@@ -178,7 +178,14 @@ body {
 }
 
 .room-header {
-  margin-bottom: 3rem;
+  margin-bottom: 2rem;
+}
+
+.room-title-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
 }
 
 .room-title-input {
@@ -187,7 +194,8 @@ body {
   border: none;
   background: transparent;
   color: #2c2c2c;
-  width: 100%;
+  flex: 1;
+  min-width: 200px;
   padding: 0.5rem 0;
   border-bottom: 2px solid transparent;
   transition: border-color 0.2s ease;
@@ -201,6 +209,45 @@ body {
 
 .room-title-input::placeholder {
   color: #bbb;
+}
+
+.room-action-btn {
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  border: 1px solid #e8e8e8;
+  background: white;
+  color: #666;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.room-action-btn:hover:not(:disabled) {
+  border-color: #ccc;
+  color: #2c2c2c;
+  background: #fafafa;
+}
+
+.room-action-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.room-mission {
+  margin-bottom: 2rem;
+  padding: 1rem 1.5rem;
+  background: #f9f9f9;
+  border-radius: 8px;
+  border-left: 3px solid #ddd;
+}
+
+.mission-text {
+  font-size: 0.95rem;
+  color: #555;
+  line-height: 1.6;
+  font-style: italic;
 }
 
 .room-objects-grid {
@@ -266,6 +313,13 @@ body {
 .room-input-container {
   padding: 2rem 0;
   border-top: 1px solid #e8e8e8;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.room-mission-btn {
+  align-self: flex-start;
 }
 
 .room-input {
