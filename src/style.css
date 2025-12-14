@@ -269,6 +269,7 @@ body {
   justify-content: center;
   border: 1px solid #e8e8e8;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: help;
 }
 
 .room-object:hover {
@@ -308,6 +309,42 @@ body {
 .object-delete:hover {
   background: rgba(0, 0, 0, 0.1);
   color: #555;
+}
+
+.object-tooltip {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.85);
+  color: white;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+  z-index: 10;
+  max-width: 200px;
+  white-space: normal;
+  word-break: break-word;
+  text-align: center;
+  line-height: 1.4;
+}
+
+.object-tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: rgba(0, 0, 0, 0.85);
+}
+
+.room-object:hover .object-tooltip {
+  opacity: 1;
 }
 
 .room-input-container {

@@ -55,9 +55,10 @@ function renderRoom() {
       
       <div class="room-objects-grid" id="objects-grid">
         ${currentRoom.objects.map((obj, index) => `
-          <div class="room-object" data-index="${index}">
+          <div class="room-object" data-index="${index}" data-text="${escapeHtml(obj.text)}">
             <span class="object-emoji">${obj.emoji}</span>
             <button class="object-delete" data-index="${index}" aria-label="Delete object">×</button>
+            <div class="object-tooltip">${escapeHtml(obj.text)}</div>
           </div>
         `).join('')}
       </div>
