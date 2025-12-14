@@ -1,0 +1,7 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+# room.html은 직접 접근 가능하도록 유지
+# 다른 모든 경로는 index.html로 리다이렉트 (필요한 경우)
+
