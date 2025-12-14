@@ -186,8 +186,13 @@ export async function generateMission(objects) {
   const API_KEY = import.meta.env.VITE_OPENAI_API_KEY
   
   if (!API_KEY || API_KEY === 'your_api_key_here') {
-    // 폴백: 간단한 미션
-    return '강아지 사진 다섯 개 찾아서 저장해보기'
+    // 폴백: 따뜻한 미션
+    const fallbackMissions = [
+      '오늘 하루 중 가장 따뜻했던 순간을 떠올려보기',
+      '소중한 사람에게 작은 편지를 써보기',
+      '창밖을 보며 잠시 쉬어가기'
+    ]
+    return fallbackMissions[Math.floor(Math.random() * fallbackMissions.length)]
   }
   
   try {
@@ -205,14 +210,22 @@ export async function generateMission(objects) {
         messages: [
           {
             role: 'system',
-            content: `사용자가 가상 공간에 배치한 오브젝트들을 분석하여 실생활에서 할 수 있는 활동 미션을 생성하세요.
+            content: `사용자가 가상 공간에 배치한 오브젝트들을 분석하여 마음을 따뜻하게 하는 미션을 생성하세요.
 
 중요한 원칙:
 1. 미션은 반드시 한국어로 작성하세요.
-2. 가상 공간의 이모지들은 실제로 가질 수 없는 것들이므로, 실생활에서 할 수 있는 구체적인 활동을 제안하세요.
-3. 예시: "강아지 사진 다섯 개 찾아서 저장해보기", "기니피그에 대한 흥미로운 사실 두 가지 찾아보기", "따뜻한 차 한 잔 마시며 책 읽기"
-4. 부드럽고 따뜻한 톤으로, 강요하지 않는 제안 형태
-5. 한 문장, 20단어 이내
+2. 일차원적이고 단순한 활동이 아닌, 감성적이고 마음을 따뜻하게 만드는 미션을 제안하세요.
+3. 좋은 예시:
+   - "오늘 하루 중 가장 따뜻했던 순간을 떠올려보기"
+   - "소중한 사람에게 작은 편지를 써보기"
+   - "창밖을 보며 잠시 쉬어가기"
+   - "좋아하는 음악을 들으며 한숨 돌리기"
+   - "오늘 감사했던 일 한 가지를 적어보기"
+   - "따뜻한 차 한 잔과 함께 자신을 돌아보는 시간 갖기"
+4. 나쁜 예시 (일차원적): "강아지 사진 다섯 개 찾아서 저장해보기", "기니피그에 대한 사실 찾아보기"
+5. 오브젝트들의 패턴을 감지하여 그 느낌과 연결된 감성적 활동을 제안하세요
+6. 부드럽고 따뜻한 톤으로, 강요하지 않는 제안 형태
+7. 한 문장, 25단어 이내
 
 반환 형식: {"mission": "미션 텍스트"}
 설명이나 마크다운 없이 JSON 객체만 반환하세요.`
@@ -236,11 +249,16 @@ export async function generateMission(objects) {
     const content = data.choices[0].message.content.trim()
     const parsed = JSON.parse(content)
     
-    return parsed.mission || '강아지 사진 다섯 개 찾아서 저장해보기'
+    return parsed.mission || '오늘 하루 중 가장 따뜻했던 순간을 떠올려보기'
     
   } catch (error) {
     console.error('GPT API error:', error)
-    return '강아지 사진 다섯 개 찾아서 저장해보기'
+    const fallbackMissions = [
+      '오늘 하루 중 가장 따뜻했던 순간을 떠올려보기',
+      '소중한 사람에게 작은 편지를 써보기',
+      '창밖을 보며 잠시 쉬어가기'
+    ]
+    return fallbackMissions[Math.floor(Math.random() * fallbackMissions.length)]
   }
 }
 

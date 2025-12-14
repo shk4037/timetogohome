@@ -65,8 +65,8 @@ function renderRoom() {
       <div class="room-input-container">
         ${objectCount === 0 ? `
           <div class="room-input-guide">
-            <p class="guide-text">당신이 이 공간에 보관하고 싶은 것이 무엇인지 설명해주세요.</p>
-            <p class="guide-examples">예: 꼬리를 흔들고 있는 강아지, 갓 나온 빵냄새 등</p>
+            <p class="guide-text">당신이 이 공간에 보관하고 싶은 것이 무엇인지 자유롭게 설명해주세요.</p>
+            <p class="guide-examples">예: 꼬리를 흔들고 있는 강아지, 갓 나온 빵냄새, 조용한 오후의 햇살, 따뜻한 차 한 잔의 향기 등</p>
           </div>
         ` : ''}
         ${showMissionBtn ? `
@@ -78,7 +78,7 @@ function renderRoom() {
           type="text" 
           class="room-input" 
           id="room-input"
-          placeholder="이 공간에 무엇을 두고 싶나요?"
+          placeholder="이 공간에 보관하고 싶은 것, 느낌, 순간을 자유롭게 적어주세요"
           autocomplete="off"
         />
       </div>
