@@ -1,0 +1,120 @@
+// 텍스트 → 이모지 변환
+// GPT API를 사용하여 텍스트를 이모지로 변환
+
+const API_KEY = import.meta.env.VITE_OPENAI_API_KEY
+
+// 폴백용 간단한 매핑 테이블 (API 실패 시 사용)
+const EMOJI_MAP = {
+  '복숭아': '🍑',
+  '케이크': '🍰',
+  '램프': '💡',
+  '책': '📖',
+  '차': '🍵',
+  '녹차': '🍵',
+  '커피': '☕',
+  '빵': '🍞',
+}
+
+// 폴백 변환 함수
+function fallbackConvert(text) {
+  const lowerText = text.toLowerCase()
+  
+  for (const [key, emoji] of Object.entries(EMOJI_MAP)) {
+    if (lowerText.includes(key.toLowerCase())) {
+      return emoji
+    }
+  }
+  
+  if (lowerText.includes('냄새') || lowerText.includes('향')) {
+    return '🫧'
+  }
+  if (lowerText.includes('공기') || lowerText.includes('바람')) {
+    return '☁️'
+  }
+  if (lowerText.includes('오후') || lowerText.includes('저녁')) {
+    return '🌤️'
+  }
+  if (lowerText.includes('새벽') || lowerText.includes('아침')) {
+    return '🌅'
+  }
+  if (lowerText.includes('밤') || lowerText.includes('밤하늘')) {
+    return '🌙'
+  }
+  if (lowerText.includes('빨래')) {
+    return '🫧☁️'
+  }
+  
+  const abstractEmojis = ['✨', '☁️', '🌤️', '💫', '🫧', '🌸']
+  return abstractEmojis[Math.floor(Math.random() * abstractEmojis.length)]
+}
+
+// GPT API를 사용한 이모지 변환
+export async function convertToEmoji(text) {
+  // API 키가 없으면 폴백 사용
+  if (!API_KEY || API_KEY === 'your_api_key_here') {
+    console.warn('OpenAI API key not found. Using fallback conversion.')
+    return fallbackConvert(text)
+  }
+  
+  try {
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${API_KEY}`
+      },
+      body: JSON.stringify({
+        model: 'gpt-4o-mini',
+        messages: [
+          {
+            role: 'system',
+            content: `You are an emoji translator. Convert user's text input into 1-3 emojis.
+
+Rules:
+1. If the input is a concrete object (e.g., "peach", "cake", "lamp"), return direct emoji(s).
+2. If the input is a sensory/abstract experience (e.g., "smell of fresh laundry", "quiet afternoon"), return metaphorical emoji(s) that capture the feeling, color, texture, or atmosphere.
+3. Allow slightly off-metaphors - resonance is more important than accuracy.
+4. Return ONLY a JSON object in this exact format: {"emojis": ["emoji1", "emoji2"]}
+5. Do not include any text, explanation, or markdown formatting. Only return the JSON object.
+
+Examples:
+- "peach" → {"emojis": ["🍑"]}
+- "green tea cake" → {"emojis": ["🍰", "🍵"]}
+- "smell of fresh laundry" → {"emojis": ["🫧", "☁️"]}
+- "quiet afternoon" → {"emojis": ["🌤️", "📖"]}`
+          },
+          {
+            role: 'user',
+            content: text
+          }
+        ],
+        response_format: { type: 'json_object' },
+        temperature: 0.7,
+        max_tokens: 50
+      })
+    })
+    
+    if (!response.ok) {
+      throw new Error(`API error: ${response.status}`)
+    }
+    
+    const data = await response.json()
+    const content = data.choices[0].message.content.trim()
+    
+    // JSON 파싱
+    const parsed = JSON.parse(content)
+    
+    if (parsed.emojis && Array.isArray(parsed.emojis) && parsed.emojis.length > 0) {
+      // 이모지 배열을 하나의 문자열로 결합
+      return parsed.emojis.join('')
+    } else {
+      throw new Error('Invalid response format')
+    }
+    
+  } catch (error) {
+    console.error('GPT API error:', error)
+    // 오류 발생 시 폴백 사용
+    return fallbackConvert(text)
+  }
+}
+
