@@ -40,6 +40,125 @@ body {
   margin-bottom: 4rem;
 }
 
+/* 무드보드 섹션 */
+.moodboard-section {
+  margin-bottom: 4rem;
+  padding: 2rem;
+  background: #fafafa;
+  border-radius: 12px;
+  border: 1px solid #e8e8e8;
+}
+
+.moodboard-title {
+  font-size: 1.5rem;
+  font-weight: 300;
+  color: #2c2c2c;
+  margin: 0 0 0.5rem 0;
+}
+
+.moodboard-description {
+  font-size: 0.9rem;
+  color: #888;
+  margin: 0 0 1.5rem 0;
+}
+
+.moodboard-input-container {
+  margin-bottom: 1.5rem;
+}
+
+.moodboard-input {
+  width: 100%;
+  font-size: 1rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid #e8e8e8;
+  border-radius: 8px;
+  background: white;
+  font-family: inherit;
+  color: #2c2c2c;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.moodboard-input:focus {
+  outline: none;
+  border-color: #ccc;
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.02);
+}
+
+.moodboard-input::placeholder {
+  color: #bbb;
+}
+
+.moodboard-items {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.moodboard-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  background: white;
+  border-radius: 8px;
+  border: 1px solid #e8e8e8;
+  transition: box-shadow 0.2s ease;
+}
+
+.moodboard-item:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.moodboard-item-text {
+  flex: 1;
+  font-size: 0.95rem;
+  color: #555;
+  line-height: 1.6;
+  word-break: break-word;
+}
+
+.moodboard-item-delete {
+  width: 24px;
+  height: 24px;
+  border: none;
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 1.2rem;
+  line-height: 1;
+  color: #888;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 0.75rem;
+  flex-shrink: 0;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.moodboard-item-delete:hover {
+  background: rgba(0, 0, 0, 0.1);
+  color: #555;
+}
+
+.moodboard-empty {
+  text-align: center;
+  color: #bbb;
+  font-size: 0.9rem;
+  padding: 2rem 0;
+  font-style: italic;
+}
+
+.rooms-section {
+  margin-top: 3rem;
+}
+
+.rooms-section-title {
+  font-size: 1.5rem;
+  font-weight: 300;
+  color: #2c2c2c;
+  margin: 0 0 2rem 0;
+}
+
 .app-title {
   font-size: 2.5rem;
   font-weight: 300;

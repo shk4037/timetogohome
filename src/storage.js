@@ -49,3 +49,36 @@ export function createRoom(name = 'Untitled Room') {
   return room
 }
 
+// 무드보드 관리
+const MOODBOARD_KEY = 'sanctuary_moodboard'
+
+export function getMoodboard() {
+  const data = localStorage.getItem(MOODBOARD_KEY)
+  if (!data) {
+    const defaultMoodboard = []
+    saveMoodboard(defaultMoodboard)
+    return defaultMoodboard
+  }
+  return JSON.parse(data)
+}
+
+export function saveMoodboard(items) {
+  localStorage.setItem(MOODBOARD_KEY, JSON.stringify(items))
+}
+
+export function addMoodboardItem(text) {
+  const items = getMoodboard()
+  items.push({
+    id: Date.now().toString(),
+    text,
+    createdAt: new Date().toISOString()
+  })
+  saveMoodboard(items)
+}
+
+export function deleteMoodboardItem(itemId) {
+  const items = getMoodboard()
+  const filtered = items.filter(item => item.id !== itemId)
+  saveMoodboard(filtered)
+}
+
