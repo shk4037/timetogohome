@@ -27,7 +27,7 @@ function renderRoom() {
   const app = document.querySelector('#app')
   const objectCount = currentRoom.objects.length
   const showTitleSuggestion = objectCount >= 3
-  const showMission = objectCount >= 5
+  const showMissionBtn = objectCount >= 5
   
   app.innerHTML = `
     <div class="room-container">
@@ -63,9 +63,15 @@ function renderRoom() {
       </div>
       
       <div class="room-input-container">
-        ${showMission && !currentRoom.mission ? `
+        ${objectCount === 0 ? `
+          <div class="room-input-guide">
+            <p class="guide-text">당신이 이 공간에 보관하고 싶은 것이 무엇인지 설명해주세요.</p>
+            <p class="guide-examples">예: 꼬리를 흔들고 있는 강아지, 갓 나온 빵냄새 등</p>
+          </div>
+        ` : ''}
+        ${showMissionBtn ? `
           <button class="room-action-btn room-mission-btn" id="mission-btn">
-            미션 생성
+            ${currentRoom.mission ? '미션 다시 생성' : '미션 생성'}
           </button>
         ` : ''}
         <input 
@@ -169,7 +175,7 @@ function renderRoom() {
       } catch (error) {
         console.error('Error generating mission:', error)
         missionBtn.disabled = false
-        missionBtn.textContent = '미션 생성'
+        missionBtn.textContent = currentRoom.mission ? '미션 다시 생성' : '미션 생성'
       }
     })
   }

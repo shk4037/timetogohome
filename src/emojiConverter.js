@@ -145,8 +145,13 @@ export async function suggestRoomName(objects) {
             role: 'system',
             content: `You suggest room names based on objects placed in the room. 
 Return ONLY a JSON object in this format: {"name": "room name"}
-The name should be 1-3 words, poetic and evocative (e.g., "온실", "동물원", "서재", "별빛 방", "향기로운 공간").
-Do not include any explanation or markdown. Only return the JSON object.`
+
+Important rules:
+1. The name must include words that convey "room" or "space" feeling, such as: "방", "공간", "서재", "온실", "정원", "작은 방", "나만의 방" etc.
+2. Examples of good names: "동물과 함께하는 방", "향기로운 공간", "별빛 서재", "따뜻한 온실", "책이 있는 방"
+3. Avoid names that just describe objects without room feeling (e.g., "동물친구들" ❌, "동물과 함께하는 방" ✅)
+4. The name should be 2-5 words, poetic and evocative
+5. Do not include any explanation or markdown. Only return the JSON object.`
           },
           {
             role: 'user',
@@ -182,7 +187,7 @@ export async function generateMission(objects) {
   
   if (!API_KEY || API_KEY === 'your_api_key_here') {
     // 폴백: 간단한 미션
-    return '이 공간에 하나 더 추가해보세요.'
+    return '강아지 사진 다섯 개 찾아서 저장해보기'
   }
   
   try {
@@ -200,25 +205,26 @@ export async function generateMission(objects) {
         messages: [
           {
             role: 'system',
-            content: `You generate gentle, inspiring missions based on objects in a room.
-Analyze the pattern of objects and suggest something the user might enjoy doing or adding.
-The mission should be:
-- Gentle and warm, not demanding
-- Based on the pattern you see in the objects
-- Short (1 sentence, under 20 words)
-- Suggestive, not prescriptive
+            content: `사용자가 가상 공간에 배치한 오브젝트들을 분석하여 실생활에서 할 수 있는 활동 미션을 생성하세요.
 
-Return ONLY a JSON object in this format: {"mission": "mission text"}
-Do not include any explanation or markdown. Only return the JSON object.`
+중요한 원칙:
+1. 미션은 반드시 한국어로 작성하세요.
+2. 가상 공간의 이모지들은 실제로 가질 수 없는 것들이므로, 실생활에서 할 수 있는 구체적인 활동을 제안하세요.
+3. 예시: "강아지 사진 다섯 개 찾아서 저장해보기", "기니피그에 대한 흥미로운 사실 두 가지 찾아보기", "따뜻한 차 한 잔 마시며 책 읽기"
+4. 부드럽고 따뜻한 톤으로, 강요하지 않는 제안 형태
+5. 한 문장, 20단어 이내
+
+반환 형식: {"mission": "미션 텍스트"}
+설명이나 마크다운 없이 JSON 객체만 반환하세요.`
           },
           {
             role: 'user',
-            content: `Objects in this room: ${objectTexts} (${objectEmojis})`
+            content: `이 방의 오브젝트들: ${objectTexts} (${objectEmojis})`
           }
         ],
         response_format: { type: 'json_object' },
         temperature: 0.9,
-        max_tokens: 50
+        max_tokens: 80
       })
     })
     
@@ -230,11 +236,11 @@ Do not include any explanation or markdown. Only return the JSON object.`
     const content = data.choices[0].message.content.trim()
     const parsed = JSON.parse(content)
     
-    return parsed.mission || '이 공간을 더 채워보세요.'
+    return parsed.mission || '강아지 사진 다섯 개 찾아서 저장해보기'
     
   } catch (error) {
     console.error('GPT API error:', error)
-    return '이 공간에 하나 더 추가해보세요.'
+    return '강아지 사진 다섯 개 찾아서 저장해보기'
   }
 }
 
