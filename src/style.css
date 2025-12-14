@@ -447,7 +447,7 @@ body {
   max-width: 250px;
   min-width: 120px;
   white-space: normal;
-  word-wrap: break-word;
+  overflow-wrap: break-word;
   word-break: keep-all;
   text-align: center;
   line-height: 1.5;
