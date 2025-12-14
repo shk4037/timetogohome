@@ -39,9 +39,9 @@ function renderRoom() {
             value="${escapeHtml(currentRoom.name)}" 
             placeholder="Untitled Room"
           />
-          ${showTitleSuggestion && currentRoom.name === 'Untitled Room' ? `
+          ${showTitleSuggestion ? `
             <button class="room-action-btn room-title-suggest-btn" id="title-suggest-btn">
-              제목 제안
+              ${currentRoom.name === 'Untitled Room' ? '제목 제안' : '제목 다시 제안'}
             </button>
           ` : ''}
         </div>
@@ -155,7 +155,7 @@ function renderRoom() {
       } catch (error) {
         console.error('Error suggesting room name:', error)
         titleSuggestBtn.disabled = false
-        titleSuggestBtn.textContent = '제목 제안'
+        titleSuggestBtn.textContent = currentRoom.name === 'Untitled Room' ? '제목 제안' : '제목 다시 제안'
       }
     })
   }
